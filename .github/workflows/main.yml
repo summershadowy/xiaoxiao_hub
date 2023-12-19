@@ -17,4 +17,4 @@ jobs:
     - name: Install requests
       run: pip3 install requests
     - name: Run script    
-      run: python3 arxiv_script.py  
+      run: python3 ./arxiv_script.py   
