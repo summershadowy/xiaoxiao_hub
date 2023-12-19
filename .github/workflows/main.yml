@@ -2,17 +2,17 @@ name: Run Python Script Daily
 
 on:
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '0/5 * * * *'
 
 jobs:
   run-script:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest  
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
+    - name: Set up Python 
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Run script 
+    - name: Run script  
       run: python arxiv_script.py 
