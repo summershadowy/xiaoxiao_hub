@@ -1,41 +1,36 @@
-import requests
-import xml.etree.ElementTree as ET
-import csv
-from datetime import datetime, timedelta
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 
-# Define the date range (yesterday)
-yesterday = datetime.now() - timedelta(1)
-yesterday_date = yesterday.strftime('%Y-%m-%d')
+def send_email(file_path, receiver_email):
+    sender_email = "your_email@example.com"  # Replace with your email
+    sender_password = "your_password"        # Replace with your email password
 
-# arXiv API endpoint and query
-api_endpoint = 'http://export.arxiv.org/api/query?'
-query = 'search_query=all:LLM+AND+all:medical&start=0&max_results=50&sortBy=submittedDate&sortOrder=descending'
+    # Create a multipart message
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = receiver_email
+    message['Subject'] = "ArXiv Papers List"
 
-# Send the request to the arXiv API
-response = requests.get(api_endpoint + query)
+    # Body
+    body = "Please find attached the list of yesterday's papers from ArXiv."
+    message.attach(MIMEText(body, 'plain'))
 
-if response.status_code == 200:
-    # Parse the response XML
-    root = ET.fromstring(response.text)
+    # Attachment
+    filename = file_path.split('/')[-1]
+    attachment = open(file_path, "rb")
+    part = MIMEBase('application', 'octet-stream')
+    part.set_payload(attachment.read())
+    encoders.encode_base64(part)
+    part.add_header('Content-Disposition', f"attachment; filename= {filename}")
+    message.attach(part)
 
-    papers = []
-    for entry in root.findall('{http://www.w3.org/2005/Atom}entry'):
-        title = entry.find('{http://www.w3.org/2005/Atom}title').text.strip()
-        abstract = entry.find('{http://www.w3.org/2005/Atom}summary').text.strip()
-        published = entry.find('{http://www.w3.org/2005/Atom}published').text.strip()
-        link = entry.find('{http://www.w3.org/2005/Atom}id').text.strip()
-
-        # Parse the published date
-        published_date = datetime.strptime(published, '%Y-%m-%dT%H:%M:%SZ').date()
-
-        # Check if the published date is yesterday
-        if published_date.strftime('%Y-%m-%d') == yesterday_date:
-            papers.append([title, abstract, published_date.strftime('%Y-%m-%d'), link])
-
-    # Save the papers to a CSV file
-    with open('output.csv', 'w', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow(['Title', 'Abstract', 'Date', 'Link'])
-        writer.writerows(papers)
-else:
-    print("Failed to retrieve data from arXiv API.")
+    # SMTP session
+    server = smtplib.SMTP('smtp.example.com', 587)  # Replace with your SMTP server and port 
+    server.starttls()
+    server.login(sender_email, sender_password)
+    text = message.as_string()
+    server.sendmail(sender_email, receiver_email, text)
+    server.quit()
