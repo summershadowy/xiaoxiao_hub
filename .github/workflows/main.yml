@@ -1,8 +1,9 @@
-name: Run Python Script Daily
+name: Run Python Script Every 5 Minutes
 
 on:
   schedule:
-    - cron: '0/5 * * * *'
+    # Runs every 5 minutes
+    - cron: '*/5 * * * *'
 
 jobs:
   run-script:
@@ -10,16 +11,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 
+    - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Install requests  
+    - name: Install requests
       run: pip install requests
-    - name: Install secure-smtplib
-      run: pip install secure-smtplib
-    - name: Run script  
-      run: python arxiv_script.py 
+    # secure-smtplib is not required as smtplib is part of the standard library
+    - name: Run script
+      run: python arxiv_script.py
+
 
 
 
