@@ -2,19 +2,26 @@ name: Run Python Script Daily
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  
+    - cron: '0/5 * * * *'
 
 jobs:
   run-script:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
+    - name: Set up Python 
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x' 
-    - name: Install requests
+        python-version: '3.x'
+    - name: Install requests  
       run: pip install requests
-    - name: Run script
-      run: python ./arxiv_script.py
+    - name: Install secure-smtplib
+      run: pip install secure-smtplib
+    - name: Run script  
+      run: python arxiv_script.py 
+
+
+
+    
+
