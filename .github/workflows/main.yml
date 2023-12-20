@@ -6,19 +6,15 @@ on:
 
 jobs:
   run-script:
-    runs-on: ubuntu-latest   
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2 
-    - name: Set up Python 
+    - uses: actions/checkout@v2
+    - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
     - name: Install requests
-      run: pip3 install requests
-      
-    - name: Install secure-smtplib
-      run: pip3 install secure-smtplib
-      
-    - name: Run script    
-      run: python3 ./arxiv_script.py   
+      run: pip install requests
+    - name: Run script
+      run: python ./arxiv_script.py
