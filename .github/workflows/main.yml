@@ -16,5 +16,9 @@ jobs:
         python-version: '3.x'
     - name: Install requests
       run: pip3 install requests
+      
+    - name: Install secure-smtplib
+      run: pip3 install secure-smtplib
+      
     - name: Run script    
       run: python3 ./arxiv_script.py   
