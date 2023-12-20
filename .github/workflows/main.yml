@@ -2,7 +2,7 @@ name: Run Python Script Daily
 
 on:
   schedule:
-    - cron: '0 */1 * * * ?' 
+    - cron: '*/5 * * * *'  
 
 jobs:
   run-script:
@@ -13,7 +13,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.x' 
     - name: Install requests
       run: pip install requests
     - name: Run script
