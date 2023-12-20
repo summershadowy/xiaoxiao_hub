@@ -16,7 +16,11 @@ jobs:
         python-version: '3.x'
     - name: Install requests
       run: pip3 install requests
-    - name: Run script    
+    - name: Run script  
+      env:
+        MY_GMAIL: ${{ secrets.my_gmail }}
+        GMAIL_PASSWORD: ${{ secrets.gmail_password }}
+        MY_OUTLOOK: ${{ secrets.my_outlook }}  
       run: python3 ./arxiv_script.py   
 
 
